@@ -1,0 +1,18 @@
+# Obsidian (local app config/workspace state, not meant to be shared)
+.obsidian/
+.trash/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Temp / backup files
+*.tmp
+~$*
+*.bak

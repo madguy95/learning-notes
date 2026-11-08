@@ -56,10 +56,33 @@ k delete po <pod-name>
 
 ### Static Pod
 #### Definition
+- Static Pod is managed directly by kubelet from manifest file. It doesn't go through API Server, Scheduler or Controllers.
+- kubelet is a systemd service. It's not a Pod.
 #### Purpose
 #### Architecture
+kubelet --(watch folder)--> manifest file -> Static Pod
+- API Server only has a read-only copy = **mirror pod**
+- Mirror pod name has node name suffix, e.g. `kube-apiserver-cp1`
 #### Key Concepts
+- Control plane components run as Static Pod (kubeadm): API Server, Scheduler, Controller-manager, Etcd (stacked)
+- Manifest files are in control-plane node at `/etc/kubernetes/manifests/`
+	- kube-apiserver.yaml
+	- kube-scheduler.yaml
+	- kube-controller-manager.yaml
+	- etcd.yaml
+- `k delete pod` -> kubelet recreates it immediately
+	- To stop a Static Pod -> move manifest file out of the folder
+- Edit + save manifest file -> kubelet recreates the Pod automatically (no restart needed)
+- Backup manifest to `/tmp`, NOT inside manifests folder (kubelet will run backup file too)
 #### Commands
+```bash
+# Backup before editing
+cp /etc/kubernetes/manifests/kube-scheduler.yaml /tmp/
+# Find manifest folder path
+grep staticPodPath /var/lib/kubelet/config.yaml
+crictl logs <container-id>
+# log in /var/log/pods/
+```
 
 ### Labels, Selectors & Namespaces
 #### Definition
